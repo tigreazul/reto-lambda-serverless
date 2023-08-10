@@ -1,0 +1,81 @@
+service: reto-lambda-serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: 
+        - arn:aws:dynamodb:us-west-2:931698352603:table/pokemons_table
+        - arn:aws:dynamodb:us-west-2:931698352603:table/planet_table
+
+functions:
+  getPokemons:
+    handler: src/public/http/getPokemons.getPokemons
+    events:
+      - httpApi:
+          path: /pokemons
+          method: get
+  getPokemon:
+    handler: src/public/http/getPokemon.getPokemon
+    events:
+      - httpApi:
+          path: /pokemon/{pokemonId}
+          method: get
+  savePokemon:
+    handler: src/public/http/createPokemon.createPokemon
+    events:
+      - httpApi:
+          path: /pokemons
+          method: post
+  updatePokemon:
+    handler: src/public/http/updatePokemon.updatePokemon
+    events:
+      - httpApi:
+          path: /pokemons/{pokemonId}
+          method: put
+  deletePokemon:
+    handler: src/public/http/deletePokemon.deletePokemon
+    events:
+      - httpApi:
+          path: /pokemons/{pokemonId}
+          method: delete
+  getPlanet:
+    handler: src/public/api/getPlanetApi.getPlanetApi
+    events:
+      - httpApi:
+          path: /planets/{id}
+          method: get
+
+resources:
+  Resources:
+    PokemonsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: pokemons_table
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pokemonId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pokemonId
+            KeyType: HASH
+    PlanetTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: planet_table
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+
+plugins:
+  - serverless-offline
