@@ -44,6 +44,8 @@ Body content:
 }
 ```
 
+Colletions in postman: https://api.postman.com/collections/1026702-eb1c5d2b-be5c-45f2-a750-99c5a84c426e?access_key=PMAT-01H7GC1108D57ZJP40GR6EA97C
+
 ## DEPLOY
 to deploy execute the command __npm run deploy__
 
